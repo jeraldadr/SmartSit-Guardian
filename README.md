@@ -20,6 +20,3 @@ This sensor provides 6 degrees of freedom (6DoF) motion sensing, including both 
 - **Library:** [SparkFun Qwiic 6DoF - LSM6DSO Library](https://registry.platformio.org/libraries/sparkfun/SparkFun%20Qwiic%206Dof%20-%20LSM6DSO/installation)
 
 
-- **Adafruit CAP1188** library for the CAP1188 sensor.
-- **SparkFun MAX3010x** library for the MAX30101 sensor.
-- **SparkFun LSM6DSO** library for the LSM6DSO sensor.
