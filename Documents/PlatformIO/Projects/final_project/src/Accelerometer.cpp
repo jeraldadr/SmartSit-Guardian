@@ -31,7 +31,7 @@ float x_val;
 const int THRESHOLD_VALUE = map(1.5, -2, 2, 0, 255);   
 uint32_t stepCount = 0;
 
-LSM6DSO initAccel() {
+void setup() {
   Serial.begin(9600);
  
   // LSM6DSO Sensor Set-Up
@@ -48,7 +48,7 @@ LSM6DSO initAccel() {
 
   if( myIMU.initialize(BASIC_SETTINGS) )
     Serial.println("Loaded Settings.");
-}
+
 
   // BLE Device Set-Up
   Serial.println("Starting BLE work!");
