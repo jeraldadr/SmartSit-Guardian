@@ -3,6 +3,7 @@
 
 #include <Adafruit_CAP1188.h>
 #include <TFT_eSPI.h>
+#include <SPI.h>
 
 #define CAP1188_CS  10
 #define CAP1188_MOSI  11
