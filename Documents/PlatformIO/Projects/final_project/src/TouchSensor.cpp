@@ -1,12 +1,7 @@
-#include <Arduino.h>
-#include <Wire.h>
-#include <SPI.h>
-#include <Adafruit_CAP1188.h>
-#include <TFT_eSPI.h>
+#include "TouchSensor.h"
 
 
-void touchinit(Adafruit_CAP1188 &cap, TFT_eSPI &tft) {
-  Serial.begin(9600);
+void initTouchSensor(Adafruit_CAP1188 &cap, TFT_eSPI &tft) {
   Serial.println("CAP1188 test!");
   tft.begin();
   tft.setRotation(1);

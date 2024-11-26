@@ -1,12 +1,9 @@
 #include <Arduino.h>
 #include <stdio.h>
 #include <Wire.h>
-
-// Accelerometer
-#include <SparkFunLSM6DSO.h> 
-
-// Biosensor 
-#include <SparkFun_Bio_Sensor_Hub_Library.h>
+#include "TouchSensor.h"
+#include "BioSensor.h"
+#include "Accelerometer.h"
 
 // Internet
 #include <HttpClient.h>
@@ -20,15 +17,19 @@
 #include "nvs.h"
 #include "nvs_flash.h"
 
-xw
+
+// declare pins
 const int resPin = 4;
 const int mfioPin = 13;
 
+// declare sensors
 SparkFun_Bio_Sensor_Hub bioHub(resPin, mfioPin); 
-
+bioData body; 
+Adafruit_CAP1188 cap = Adafruit_CAP1188(CAP1188_RESET);
+TFT_eSPI tft = TFT_eSPI();
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   Wire.begin();
   int result = bioHub.begin();
