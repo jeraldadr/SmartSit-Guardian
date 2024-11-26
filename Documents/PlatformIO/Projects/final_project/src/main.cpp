@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <stdio.h>
-#include <Wire.h>
+
+// Sensors
 a#include "TouchSensor.h"
 #include "BioSensor.h"
 #include "Accelerometer.h"

@@ -1,6 +1,5 @@
 #include "BioSensor.h"
 
-
 void initBioSensor(SparkFun_Bio_Sensor_Hub &bioHub) {
   int result = bioHub.begin();
   if (result == 0) // Zero errors!
