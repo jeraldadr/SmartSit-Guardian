@@ -24,6 +24,7 @@ void initBioSensor(SparkFun_Bio_Sensor_Hub &bioHub) {
 
 void readBioData(SparkFun_Bio_Sensor_Hub &bioHub) {
     bioData body = bioHub.readBpm();
+    Serial.println("--------------");
     Serial.print("Heartrate: ");
     Serial.println(body.heartRate); 
     Serial.print("Confidence: ");
@@ -32,6 +33,6 @@ void readBioData(SparkFun_Bio_Sensor_Hub &bioHub) {
     Serial.println(body.oxygen); 
     Serial.print("Status: ");
     Serial.println(body.status); 
-    delay(250); 
+    delay(1000);
 }
 

@@ -3,6 +3,9 @@
 
 #include <SparkFunLSM6DSO.h>
 
+const unsigned long calibrationTime = 10000; // 10s calibration
+const int THRESHOLD_VALUE = map(1.5, -2, 2, 0, 255);   // threshold
+
 // Initialize the accelerometer 
 void initAccel(LSM6DSO &myIMU);
 

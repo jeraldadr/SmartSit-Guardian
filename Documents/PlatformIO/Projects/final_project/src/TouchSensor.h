@@ -16,6 +16,6 @@
 void initTouchSensor(Adafruit_CAP1188 &cap, TFT_eSPI &tft);
 
 // Detect whether the user touch the sensor
-void readTouch(Adafruit_CAP1188 &cap, TFT_eSPI &tft);
+bool readTouch(Adafruit_CAP1188 &cap, TFT_eSPI &tft);
 
 #endif // TOUCHSENSOR_H

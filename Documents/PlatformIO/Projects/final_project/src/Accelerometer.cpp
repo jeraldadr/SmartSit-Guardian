@@ -1,10 +1,6 @@
 #include "Accelerometer.h"
 
 
-const unsigned long calibrationTime = 10000; // 10s calibration
-const int THRESHOLD_VALUE = map(1.5, -2, 2, 0, 255);   // threshold
-
-
 void initAccel(LSM6DSO &myIMU) {
   //Assume serial is already initialized
   // LSM6DSO Sensor Set-Up
