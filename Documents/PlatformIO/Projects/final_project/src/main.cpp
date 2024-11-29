@@ -6,17 +6,8 @@
 #include "BioSensor.h"
 #include "Accelerometer.h"
 
-// Internet
-#include <HttpClient.h>
-#include <WiFi.h>
-#include <inttypes.h>
-
-// MCU 
-#include "esp_system.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "nvs.h"
-#include "nvs_flash.h"
+// Cloud Connection
+#include "cloudConnect.h"
 
 
 // Reset pin, MFIO pin, Buzzer pin
@@ -34,12 +25,19 @@ TFT_eSPI tft = TFT_eSPI(); // screen
 bool touched = false;
 bool calibrated = false;
 unsigned long sittingTime = 0;
+unsigned long heartRateSum = 0;
+unsigned long oxygenSum = 0;
+unsigned int heartRateCount = 0;
+
 float min_X = 0;
 float max_X = 0;
 
 void setup(){
   pinMode(buzzer, OUTPUT);
+
   Serial.begin(9600);
+  connectWiFi();
+
   Wire.begin();
 
   initBioSensor(bioHub);
@@ -50,7 +48,7 @@ void setup(){
 }
 
 void loop(){ 
-  // Once touched, start recording user data
+  // // Once touched, start recording user data
   if (!touched && readTouch(cap, tft)) {
     tone(buzzer, 1000, 300);
     noTone(buzzer);
@@ -62,9 +60,13 @@ void loop(){
   delay(100); 
 
   if (touched) {
-    // bioData body = readBioData(bioHub); // biosensor needs 5-10s to start updating 
-    // if (receiveValidData(body)) // once the data is validated, send it to the "database"
-
+    bioData body = readBioData(bioHub); // biosensor needs 5-10s to start updating 
+    if (receiveValidData(body)) // once the data is validated, send it to the "database" 
+    {
+      heartRateSum += body.heartRate;
+      oxygenSum += body.oxygen; 
+      heartRateCount++;
+    }
     float sittingData = readAccel(myIMU, min_X, max_X); 
     unsigned long elapsedTime = (millis() - sittingTime) / 1000;
 
@@ -75,9 +77,17 @@ void loop(){
     tft.setCursor(0,65);
     tft.print(elapsedTime);
     tft.println("s");
+
     if (!onPosition(sittingData)) {
+      float averageHeartRate = (heartRateCount > 0) ? (float)heartRateSum / heartRateCount : 0;
+      float averageOxygen = (heartRateCount > 0) ? (float)oxygenSum / heartRateCount : 0;
+      Serial.print("Average Heart Rate: ");
+      Serial.print(averageHeartRate, 2); 
+      Serial.println(" bpm");
+      Serial.print("Average Oxygen: ");
+      Serial.print(averageOxygen, 2); 
+      Serial.println(" lpm");
       touched = false;
     }
   }
-  
 }

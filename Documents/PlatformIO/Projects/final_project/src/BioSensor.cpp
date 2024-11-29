@@ -41,7 +41,7 @@ bool receiveValidData(bioData &body) {
   if (body.status == 3) {
     // These constraints set arbitrary based on the test data received
     if (body.heartRate > 60 && body.confidence > 90 && body.oxygen > 90)
-      Serial.print("Receive Valid Bio Data!");
+      Serial.println("Receive Valid Bio Data!");
       return true;
   }
   return false;
