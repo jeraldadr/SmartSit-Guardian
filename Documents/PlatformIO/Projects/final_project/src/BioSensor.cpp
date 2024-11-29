@@ -3,14 +3,14 @@
 void initBioSensor(SparkFun_Bio_Sensor_Hub &bioHub) {
   int result = bioHub.begin();
   if (result == 0) // Zero errors!
-    Serial.println("Sensor started!");
+    Serial.println("BioSensor started!");
   else
-    Serial.println("Could not communicate with the sensor!");
+    Serial.println("Could not communicate with the BioSensor!");
  
-  Serial.println("Configuring Sensor...."); 
+  Serial.println("Configuring BioSensor...."); 
   int error = bioHub.configBpm(MODE_ONE); // Configuring just the BPM settings. 
   if(error == 0){ 
-    Serial.println("Sensor configured.");
+    Serial.println("BioSensor configured.");
   }
   else {
     Serial.println("Error configuring sensor.");
@@ -22,7 +22,7 @@ void initBioSensor(SparkFun_Bio_Sensor_Hub &bioHub) {
   delay(4000); 
 }
 
-void readBioData(SparkFun_Bio_Sensor_Hub &bioHub) {
+bioData readBioData(SparkFun_Bio_Sensor_Hub &bioHub) {
     bioData body = bioHub.readBpm();
     Serial.println("--------------");
     Serial.print("Heartrate: ");
@@ -33,6 +33,17 @@ void readBioData(SparkFun_Bio_Sensor_Hub &bioHub) {
     Serial.println(body.oxygen); 
     Serial.print("Status: ");
     Serial.println(body.status); 
-    delay(1000);
+    delay(300);
+    return body; 
+}
+
+bool receiveValidData(bioData &body) {
+  if (body.status == 3) {
+    // These constraints set arbitrary based on the test data received
+    if (body.heartRate > 60 && body.confidence > 90 && body.oxygen > 90)
+      Serial.print("Receive Valid Bio Data!");
+      return true;
+  }
+  return false;
 }
 

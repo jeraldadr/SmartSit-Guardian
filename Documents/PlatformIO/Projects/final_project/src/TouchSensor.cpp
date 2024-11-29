@@ -2,16 +2,16 @@
 
 
 void initTouchSensor(Adafruit_CAP1188 &cap, TFT_eSPI &tft) {
-  Serial.println("CAP1188 test!");
+  Serial.println("Touch sensor test!");
   tft.begin();
   tft.setRotation(1);
   tft.setTextSize(5);
   tft.setTextColor(TFT_WHITE, TFT_BLACK);
   if (!cap.begin(0x29)) {
-    Serial.println("CAP1188 not found");
+    Serial.println("Touch sensor not found");
     while (1);
   }
-  Serial.println("CAP1188 found!");
+  Serial.println("Touch sensor found!");
 }
 
 /*IMPLEMENT Interrupts and FreeRTOS*/
@@ -35,8 +35,6 @@ bool readTouch(Adafruit_CAP1188 &cap, TFT_eSPI &tft) {
     return true;
   }
   tft.setCursor(0, 15);
-  tft.println("Not");
-  tft.setCursor(0, 60);
-  tft.println("Touched");
+  tft.println("Idle");
   return false;
 }
