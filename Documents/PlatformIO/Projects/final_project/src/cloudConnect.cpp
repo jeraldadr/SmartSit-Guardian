@@ -72,16 +72,25 @@ void connectWiFi() {
 }
 
 void sendSensorData(float heartRate, float oxygen, unsigned long elapsedTime) {
-  int err = 0;
+  // Validate inputs
+  if (heartRate <= 0 || oxygen <= 0 || oxygen > 100 || elapsedTime < 0) {
+    Serial.println("Invalid sensor data. Request not sent.");
+    return;
+  }
 
   WiFiClient c;
   HttpClient http(c);     
 
   // Construct URL path with sensor data
-  String urlPath = "/?heartRate=" + String(heartRate) +
-                   "&oxygen=" + String(oxygen) +
-                   "&sittingTime=" + String(elapsedTime);
-  err = http.get(serverIP, serverPort, urlPath.c_str());
+  // String urlPath = "/?heartRate=" + String(heartRate) +
+  //                  "&oxygen=" + String(oxygen) +
+  //                  "&sittingTime=" + String(elapsedTime);
+
+  // int err = http.get(serverIP, serverPort, urlPath.c_str());
+  String payload = "{\"heartRate\":" + String(heartRate) +
+                 ",\"oxygen\":" + String(oxygen) +
+                 ",\"sittingTime\":" + String(elapsedTime) + "}";
+  err = http.post(serverIP, serverPort, "/update", "application/json", payload);
 
   if (err == 0) {
     Serial.println("Started request successfully");
@@ -102,7 +111,8 @@ void sendSensorData(float heartRate, float oxygen, unsigned long elapsedTime) {
         unsigned long timeoutStart = millis();
         char c;
 
-        while ((http.connected() || http.available()) && ((millis() - timeoutStart) < kNetworkTimeout)) {
+        while ((http.connected() || http.available()) && 
+              ((millis() - timeoutStart) < kNetworkTimeout)) {
           if (http.available()) {
             c = http.read();
             Serial.print(c);
