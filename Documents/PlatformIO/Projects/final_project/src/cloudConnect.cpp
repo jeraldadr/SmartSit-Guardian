@@ -1,4 +1,6 @@
 #include "cloudConnect.h"
+#include <MQTTClient.h>
+#include <ArduinoJson.h>
 
 // make sure to enable "Maximize Compatibility" in iPhone HotSpot Setting
 char ssid[50] = "Jeremy";  
