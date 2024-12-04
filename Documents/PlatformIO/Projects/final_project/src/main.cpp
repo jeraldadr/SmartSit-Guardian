@@ -44,7 +44,9 @@ void setup(){
   initTouchSensor(cap, tft); 
   initAccel(myIMU);
 
-  sittingTime = millis(); // initialize the timestamp 
+  sittingTime = millis(); // initialize the timestamp
+
+  connectAWS(); 
 }
 
 void loop(){ 
