@@ -1,76 +1,85 @@
-#include "cloudConnect.h"
+#include "secrets.h"
+#include <WiFiClientSecure.h>
 #include <MQTTClient.h>
 #include <ArduinoJson.h>
+#include "WiFi.h"
 
-// make sure to enable "Maximize Compatibility" in iPhone HotSpot Setting
-char ssid[50] = "Jeremy";  
-char pass[50] = "99999999";
+// The MQTT topics that this device should publish/subscribe
+#define AWS_IOT_PUBLISH_TOPIC   "esp32/pub"
+#define AWS_IOT_SUBSCRIBE_TOPIC "esp32/sub"
 
-void nvs_access() {
-  // Initialize NVS
-  esp_err_t err = nvs_flash_init();
-  if (err == ESP_ERR_NVS_NO_FREE_PAGES ||
-      err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-    // NVS partition was truncated and needs to be erased
-    // Retry nvs_flash_init
-    ESP_ERROR_CHECK(nvs_flash_erase());
-    err = nvs_flash_init();
-  }
-  ESP_ERROR_CHECK(err);
+WiFiClientSecure net = WiFiClientSecure();
+MQTTClient client = MQTTClient(256);
 
-  // Open
-  Serial.printf("\n");
-  Serial.printf("Opening Non-Volatile Storage (NVS) handle... ");
-  nvs_handle_t my_handle;
-  err = nvs_open("storage", NVS_READWRITE, &my_handle);
-  if (err != ESP_OK) {
-    Serial.printf("Error (%s) opening NVS handle!\n", esp_err_to_name(err));
-  } else {
-    Serial.printf("Done\n");
-    Serial.printf("Retrieving SSID/PASSWD\n");
-    size_t ssid_len;
-    size_t pass_len;
-    err = nvs_get_str(my_handle, "ssid", ssid, &ssid_len);
-    err |= nvs_get_str(my_handle, "pass", pass, &pass_len);
-    switch (err) {
-      case ESP_OK:
-        Serial.printf("Done\n");
-        Serial.printf("SSID = %s\n", ssid);
-        Serial.printf("PASSWD = %s\n", pass);
-        break;
-      case ESP_ERR_NVS_NOT_FOUND:
-        Serial.printf("The value is not initialized yet!\n");
-        break;
-      default:
-        Serial.printf("Error (%s) reading!\n", esp_err_to_name(err));
-    }
+void connectAWS()
+{
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+
+  Serial.println("Connecting to Wi-Fi");
+
+  while (WiFi.status() != WL_CONNECTED){
+    delay(500);
+    Serial.print(".");
   }
 
-  // Close
-  nvs_close(my_handle);
+  // Configure WiFiClientSecure to use the AWS IoT device credentials
+  net.setCACert(AWS_CERT_CA);
+  net.setCertificate(AWS_CERT_CRT);
+  net.setPrivateKey(AWS_CERT_PRIVATE);
+
+  // Connect to the MQTT broker on the AWS endpoint we defined earlier
+  client.begin(AWS_IOT_ENDPOINT, 8883, net);
+
+  // Create a message handler
+  client.onMessage(messageHandler);
+
+  Serial.print("Connecting to AWS IOT");
+
+  while (!client.connect(THINGNAME)) {
+    Serial.print(".");
+    delay(100);
+  }
+
+  if(!client.connected()){
+    Serial.println("AWS IoT Timeout!");
+    return;
+  }
+
+  // Subscribe to a topic
+  client.subscribe(AWS_IOT_SUBSCRIBE_TOPIC);
+
+  Serial.println("AWS IoT Connected!");
 }
 
-void connectWiFi() {
-    delay(1000);
-    nvs_access();
-    delay(1000);
-    Serial.println();
-    Serial.println();
-    Serial.print("Connecting to ");
-    Serial.println(ssid);
+void publishMessage()
+{
+  StaticJsonDocument<200> doc;
+  doc["time"] = millis();
+  doc["sensor_a0"] = analogRead(0);
+  char jsonBuffer[512];
+  serializeJson(doc, jsonBuffer); // print to client
 
-    WiFi.begin(ssid, pass);
-    while (WiFi.status() != WL_CONNECTED) {
-        delay(500);
-        Serial.print(".");
-    }
+  client.publish(AWS_IOT_PUBLISH_TOPIC, jsonBuffer);
+}
 
-    Serial.println("");
-    Serial.println("WiFi connected");
-    Serial.println("IP address: ");
-    Serial.println(WiFi.localIP());
-    Serial.println("MAC address: ");
-    Serial.println(WiFi.macAddress());
+void messageHandler(String &topic, String &payload) {
+  Serial.println("incoming: " + topic + " - " + payload);
+
+//  StaticJsonDocument<200> doc;
+//  deserializeJson(doc, payload);
+//  const char* message = doc["message"];
+}
+
+void setup() {
+  Serial.begin(9600);
+  connectAWS();
+}
+
+void loop() {
+  publishMessage();
+  client.loop();
+  delay(1000);
 }
 
 void sendSensorData(float heartRate, float oxygen, unsigned long elapsedTime) {
