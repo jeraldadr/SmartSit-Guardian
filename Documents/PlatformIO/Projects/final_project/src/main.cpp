@@ -36,7 +36,7 @@ void setup(){
   pinMode(buzzer, OUTPUT);
 
   Serial.begin(9600);
-  connectWiFi();
+  connectWIFI();
 
   Wire.begin();
 
@@ -45,8 +45,7 @@ void setup(){
   initAccel(myIMU);
 
   sittingTime = millis(); // initialize the timestamp
-
-  connectAWS(); 
+ 
 }
 
 void loop(){ 
