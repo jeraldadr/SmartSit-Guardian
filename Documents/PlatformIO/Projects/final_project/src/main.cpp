@@ -49,7 +49,8 @@ void setup(){
 }
 
 void loop(){ 
-  // // Once touched, start recording user data
+  sendSensorData(50,50,50);
+  /*// // Once touched, start recording user data
   if (!touched && readTouch(cap, tft)) {
     tone(buzzer, 1000, 300);
     noTone(buzzer);
@@ -89,6 +90,8 @@ void loop(){
       Serial.print(averageOxygen, 2); 
       Serial.println(" lpm");
       touched = false;
+
     }
   }
+  */
 }

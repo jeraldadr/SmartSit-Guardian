@@ -3,8 +3,8 @@
 #define SECRET
 #define THINGNAME ""
 
-const char WIFI_SSID[7] = "Jerald";
-const char WIFI_PASSWORD[9] = "12345678";
+const char WIFI_SSID[20] = "Jerald";
+const char WIFI_PASSWORD[20] = "12345678";
 // AWS Bucket INFO
 const char* bucket_name = "smartsit-bucket";
 const char* object_key = "sensor-info.txt";  // The file name in the S3 bucket
