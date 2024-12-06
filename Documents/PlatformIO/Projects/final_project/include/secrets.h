@@ -12,6 +12,7 @@ const char* region = "us-west-1";
 const char* AWS_IOT_ENDPOINT = "https://s3.us-west-1.amazonaws.com";  
 const char* AWS_ACCESS_KEY_ID = "AKIA4WJPW3JYC7TVKCL2";
 const char* AWS_SECRET_KEY = "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";
+
 // Amazon Root CA 1
 static const char AWS_CERT_CA[] PROGMEM = R"EOF(
 -----BEGIN CERTIFICATE-----

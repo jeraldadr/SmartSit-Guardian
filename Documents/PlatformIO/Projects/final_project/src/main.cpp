@@ -71,6 +71,7 @@ void loop(){
     float sittingData = readAccel(myIMU, min_X, max_X); 
     unsigned long elapsedTime = (millis() - sittingTime) / 1000;
 
+    // display the sitting time on the screen
     tft.fillScreen(TFT_BLACK);
     tft.setCursor(0,15);
     tft.fillRect(0, 15, 120, 20, TFT_BLACK);
@@ -79,6 +80,7 @@ void loop(){
     tft.print(elapsedTime);
     tft.println("s");
 
+    // once the user is not on the object
     if (!onPosition(sittingData)) {
       float averageHeartRate = (heartRateCount > 0) ? (float)heartRateSum / heartRateCount : 0;
       float averageOxygen = (heartRateCount > 0) ? (float)oxygenSum / heartRateCount : 0;

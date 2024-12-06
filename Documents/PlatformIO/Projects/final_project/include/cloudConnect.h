@@ -21,21 +21,28 @@ It constructs the URL path with the sensor data, makes a GET request, and handle
 void sendSensorData(float heartRate, float oxygen, unsigned long elapsedTime);
 
 void connectWIFI();
+
 String getAWSTimestamp();
 
 String hashPayload(const String& payload);
-/*
 void hmacSha256(const unsigned char *key, size_t keyLen, 
                 const unsigned char *data, size_t dataLen, 
                 unsigned char *output);
+
 void generateSigningKey(const String &secretKey, const String &dateStamp, 
                         const String &region, const String &service, 
                         unsigned char *signingKey);
+
 String createCanonical(String payloadHash);
+
 String toHex(const unsigned char *data, size_t length);
+
 void computeSignature(const unsigned char *signingKey, const String &stringToSign, unsigned char *signature);
+
 String getCanonicalRequestHash(const String &canonicalRequest);
+
 String createStringtoSign(String canonicalRequest, String timestamp, String dateString);
+
 String byteToHex(unsigned char* byteArray, size_t length);
-*/
+
 #endif // CLOUDCONNECT_H

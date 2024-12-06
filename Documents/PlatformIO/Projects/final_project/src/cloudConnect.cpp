@@ -64,7 +64,7 @@ void publishMessage(float avgHeart, float avgOxy)
 
   client.publish(AWS_IOT_PUBLISH_TOPIC, jsonBuffer);
 }
-}
+
 
 void messageHandler(String &topic, String &payload) {
   Serial.println("incoming: " + topic + " - " + payload);
@@ -78,6 +78,4 @@ void setup() {
   Serial.begin(9600);
   connectAWS();
 }
-
-void loop() {
   
