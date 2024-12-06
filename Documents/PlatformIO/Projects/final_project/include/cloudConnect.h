@@ -24,6 +24,7 @@ void connectWIFI();
 String getAWSTimestamp();
 
 String hashPayload(const String& payload);
+/*
 void hmacSha256(const unsigned char *key, size_t keyLen, 
                 const unsigned char *data, size_t dataLen, 
                 unsigned char *output);
@@ -36,4 +37,5 @@ void computeSignature(const unsigned char *signingKey, const String &stringToSig
 String getCanonicalRequestHash(const String &canonicalRequest);
 String createStringtoSign(String canonicalRequest, String timestamp, String dateString);
 String byteToHex(unsigned char* byteArray, size_t length);
+*/
 #endif // CLOUDCONNECT_H

@@ -49,8 +49,7 @@ void setup(){
 }
 
 void loop(){ 
-  sendSensorData(50,50,50);
-  /*// // Once touched, start recording user data
+  // // Once touched, start recording user data
   if (!touched && readTouch(cap, tft)) {
     tone(buzzer, 1000, 300);
     noTone(buzzer);
@@ -93,5 +92,4 @@ void loop(){
 
     }
   }
-  */
 }
