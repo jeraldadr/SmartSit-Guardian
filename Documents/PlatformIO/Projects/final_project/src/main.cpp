@@ -21,6 +21,10 @@ Adafruit_CAP1188 cap = Adafruit_CAP1188(CAP1188_RESET); // Touch Sensor
 LSM6DSO myIMU; // Accelerometer
 TFT_eSPI tft = TFT_eSPI(); // screen 
 
+// cloud 
+WiFiClientSecure net = WiFiClientSecure();
+MQTTClient client = MQTTClient(512);
+
 // variable for logic control and calibration
 bool touched = false;
 bool calibrated = false;
@@ -28,6 +32,8 @@ unsigned long sittingTime = 0;
 unsigned long heartRateSum = 0;
 unsigned long oxygenSum = 0;
 unsigned int heartRateCount = 0;
+float averageHeartRate = 0; 
+float averageOxygen = 0;
 
 float min_X = 0;
 float max_X = 0;
@@ -36,7 +42,7 @@ void setup(){
   pinMode(buzzer, OUTPUT);
 
   Serial.begin(9600);
-  connectWIFI();
+  connectAWS(net, client);
 
   Wire.begin();
 
@@ -49,6 +55,8 @@ void setup(){
 }
 
 void loop(){ 
+  client.loop();
+
   // // Once touched, start recording user data
   if (!touched && readTouch(cap, tft)) {
     tone(buzzer, 1000, 300);
@@ -82,16 +90,24 @@ void loop(){
 
     // once the user is not on the object
     if (!onPosition(sittingData)) {
-      float averageHeartRate = (heartRateCount > 0) ? (float)heartRateSum / heartRateCount : 0;
-      float averageOxygen = (heartRateCount > 0) ? (float)oxygenSum / heartRateCount : 0;
+      averageHeartRate = (heartRateCount > 0) ? (float)heartRateSum / heartRateCount : 0;
+      averageOxygen = (heartRateCount > 0) ? (float)oxygenSum / heartRateCount : 0;
       Serial.print("Average Heart Rate: ");
       Serial.print(averageHeartRate, 2); 
       Serial.println(" bpm");
       Serial.print("Average Oxygen: ");
       Serial.print(averageOxygen, 2); 
       Serial.println(" lpm");
-      touched = false;
 
+      // Publish the averages to MQTT
+      publishMessage(client, averageHeartRate, averageOxygen);
+      delay(2000);
+
+      // Reset for next session
+      touched = false;
+      heartRateSum = 0;
+      oxygenSum = 0;
+      heartRateCount = 0;
     }
   }
 }

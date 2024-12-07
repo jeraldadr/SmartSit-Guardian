@@ -3,8 +3,6 @@
 #include <freertos/task.h>
 
 
-
-
 void initAccel(LSM6DSO &myIMU) {
   //Assume serial is already initialized
   // LSM6DSO Sensor Set-Up
@@ -44,7 +42,8 @@ float readAccel(LSM6DSO &myIMU, float &min_X, float &max_X) {
 }
 
 bool onPosition(float x_val) {
-  if (x_val >= 300) 
+  Serial.println(x_val);
+  if (x_val >= 275 || x_val < -50) 
     return false;
   return true;
 }

@@ -1,15 +1,19 @@
+#ifndef SECRETS_H
+#define SECRETS_H
+
 #include <pgmspace.h>
 
 #define SECRET
-#define THINGNAME ""
+#define THINGNAME "MyNewESP32"
 
-const char WIFI_SSID[20] = "Jerald";
-const char WIFI_PASSWORD[20] = "12345678";
+char WIFI_SSID[20] = "Jeremy";
+char WIFI_PASSWORD[20] = "99999999";
+
 // AWS Bucket INFO
 const char* bucket_name = "smartsit-bucket";
 const char* object_key = "sensor-info.txt";  // The file name in the S3 bucket
 const char* region = "us-west-1";  
-const char* AWS_IOT_ENDPOINT = "https://s3.us-west-1.amazonaws.com";  
+const char* AWS_IOT_ENDPOINT = "a2pc0ciqneimtm-ats.iot.us-west-1.amazonaws.com";  
 const char* AWS_ACCESS_KEY_ID = "AKIA4WJPW3JYC7TVKCL2";
 const char* AWS_SECRET_KEY = "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";
 
@@ -91,3 +95,5 @@ TdJHLEECgYAVPySWJDuJiNCw3dr0qiMfqMscr3mR+5TBwMW70PgR2ykviRGwBPO/
 1FDNwUG1+M/XtpChAwUzKMTLZ3DrvoJqT/7BuFYwAr0R6+5o0r7gcw==
 -----END RSA PRIVATE KEY-----
 )KEY";
+
+#endif // SECRETS_H
