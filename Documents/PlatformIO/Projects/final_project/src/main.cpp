@@ -105,7 +105,7 @@ void loop(){
 
       // Publish the averages to MQTT
       publishMessage(client, averageHeartRate, averageOxygen, elapsedTime);
-      delay(2500);
+      delay(3000);
 
       // Reset for next session
       touched = false;
