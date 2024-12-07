@@ -42,8 +42,7 @@ float readAccel(LSM6DSO &myIMU, float &min_X, float &max_X) {
 }
 
 bool onPosition(float x_val) {
-  Serial.println(x_val);
-  if (x_val >= 275 || x_val < -50) 
+  if (x_val >= 250 || x_val < -105) 
     return false;
   return true;
 }

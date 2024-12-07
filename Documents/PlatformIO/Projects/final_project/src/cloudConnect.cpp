@@ -102,14 +102,16 @@ void connectAWS(WiFiClientSecure &net, MQTTClient &client)
   Serial.println("AWS IoT Connected!");
 }
 
-void publishMessage(MQTTClient &client, float avgHeart, float avgOxy)
+void publishMessage(MQTTClient &client, float avgHeart, float avgOxy, unsigned long elapsedTime)
 {
   StaticJsonDocument<200> doc;
 
   doc["oxygen"] = avgOxy;
   doc["heartRate"] = avgHeart;
+  doc["sittingTime"] = elapsedTime;
+
   char jsonBuffer[512];
-  serializeJson(doc, jsonBuffer); // print to client
+  serializeJson(doc, jsonBuffer); 
 
   // Publish to AWS IoT
   if (client.publish(AWS_IOT_PUBLISH_TOPIC, jsonBuffer)) {

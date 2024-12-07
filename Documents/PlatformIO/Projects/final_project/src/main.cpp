@@ -98,10 +98,14 @@ void loop(){
       Serial.print("Average Oxygen: ");
       Serial.print(averageOxygen, 2); 
       Serial.println(" lpm");
+      Serial.print("Sitting Time: ");
+      Serial.print(elapsedTime);
+      Serial.println(" s");
+
 
       // Publish the averages to MQTT
-      publishMessage(client, averageHeartRate, averageOxygen);
-      delay(2000);
+      publishMessage(client, averageHeartRate, averageOxygen, elapsedTime);
+      delay(2500);
 
       // Reset for next session
       touched = false;

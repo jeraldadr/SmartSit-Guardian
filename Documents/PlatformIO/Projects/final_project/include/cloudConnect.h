@@ -10,7 +10,7 @@ void nvs_access();
 
 void connectAWS(WiFiClientSecure &net, MQTTClient &client);
 
-void publishMessage(MQTTClient &client, float avgHeart, float avgOxy);
+void publishMessage(MQTTClient &client, float avgHeart, float avgOxy, unsigned long elapsedTime);
 
 void messageHandler(String &topic, String &payload);
 

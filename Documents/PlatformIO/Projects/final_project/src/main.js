@@ -1,90 +1,102 @@
-let humArr = [], tempArr = [], upArr = [];
-let myChart = Highcharts.chart('container1', {
-    
-    title: {
-        text: 'Line chart'
-    },
+let oxygenArr = [],
+   heatRateArr = [],
+   sittingTimeArr = [],
+   upArr = [];
+let myChart = Highcharts.chart("container1", {
+   title: {
+      text: "Smart Sit Tracker Dashboard",
+   },
 
-    subtitle: {
-        text: 'subtitle'
-    },
+   subtitle: {
+      text: "Monitor Your Health and Sitting Habits in Real-Time",
+   },
 
-    yAxis: {
-        title: {
-            text: 'Value'
-        }
-    },
+   yAxis: {
+      title: {
+         text: "Value",
+      },
+   },
 
-    xAxis: {
-        categories: upArr
-    },
+   xAxis: {
+      categories: upArr,
+   },
 
-    legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'middle'
-    },
+   legend: {
+      layout: "vertical",
+      align: "right",
+      verticalAlign: "middle",
+   },
 
-    plotOptions: {
-        series: {
-            label: {
-                connectorAllowed: false
-            }
-        }
-    },
-    series: [{
-        name: 'oxygen',
-        data: []
-    }, {
-        name: 'heartRate',
-        data: []
-    }],
+   plotOptions: {
+      series: {
+         label: {
+            connectorAllowed: false,
+         },
+      },
+   },
+   series: [
+      {
+         name: "oxygen",
+         data: [],
+      },
+      {
+         name: "heartRate",
+         data: [],
+      },
+      {
+         name: "sittingTime",
+         data: [],
+      },
+   ],
 
-    responsive: {
-        rules: [{
+   responsive: {
+      rules: [
+         {
             condition: {
-                maxWidth: 500
+               maxWidth: 500,
             },
             chartOptions: {
-                legend: {
-                    layout: 'horizontal',
-                    align: 'center',
-                    verticalAlign: 'bottom'
-                }
-            }
-        }]
-    }
+               legend: {
+                  layout: "horizontal",
+                  align: "center",
+                  verticalAlign: "bottom",
+               },
+            },
+         },
+      ],
+   },
 });
 
-let getWheatherData = function () {
-    $.ajax({
-        type: "GET",
-        url: "https://smartsit-bucket.s3.us-west-1.amazonaws.com/sensor-info",  //example: https://mydatabucket.s3.amazonaws.com/myKey"
-        dataType: "json",
-        async: false,
-        success: function (data) {
-            console.log('data', data);
-            drawChart(data);
-        },
-        error: function (xhr, status, error) {
-            console.error("JSON error: " + status);
-        }
-    });
-}
+let getUserData = function () {
+   $.ajax({
+      type: "GET",
+      url: "https://smartsit-bucket.s3.us-west-1.amazonaws.com/sensor-info",
+      dataType: "json",
+      async: false,
+      success: function (data) {
+         console.log("data", data);
+         drawChart(data);
+      },
+      error: function (xhr, status, error) {
+         console.error("JSON error: " + status);
+      },
+   });
+};
 
 let drawChart = function (data) {
+   let { oxygen, heartRate, sittingTime, timestamps } = data;
 
-    let { oxygen, heartRate, timestamps} = data;
+   oxygenArr.push(Number(oxygen));
+   heatRateArr.push(Number(heartRate));
+   sittingTimeArr.push(Number(sittingTime));
+   upArr.push(Number(timestamps));
 
-    humArr.push(Number(oxygen));
-    tempArr.push(Number(heartRate));
-    upArr.push(Number(timestamps));
-    
-    myChart.series[0].setData(humArr , true)
-    myChart.series[1].setData(tempArr , true)
-}
+   myChart.series[0].setData(oxygenArr, true);
+   myChart.series[1].setData(heatRateArr, true);
+   myChart.series[2].setData(sittingTimeArr, true);
+};
 
-let intervalTime = 3 * 1000; // 3 second interval polling, change as you like
+let intervalTime = 3 * 1000;
 setInterval(() => {
-    getWheatherData();
+   getUserData();
 }, intervalTime);
